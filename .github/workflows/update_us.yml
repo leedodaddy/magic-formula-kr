@@ -1,0 +1,45 @@
+name: S&P 500 순위 업데이트
+
+on:
+  schedule:
+    - cron: "*/15 13-20 * * 1-5"  # 미국 장중 (KST 22:30~05:00 무렵) 15분마다 시세 반영
+    - cron: "0 11 * * 1-5"        # 평일 KST 20:00 구성종목·재무제표 전체 새로 받기
+  workflow_dispatch:
+    inputs:
+      full:
+        description: "재무제표까지 전부 새로 받기"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas lxml yfinance
+      - name: 순위 계산
+        run: |
+          if [ "${{ github.event.schedule }}" = "0 11 * * 1-5" ] || [ "${{ inputs.full }}" = "true" ]; then
+            python scripts/update_us.py --full
+          else
+            python scripts/update_us.py
+          fi
+      - name: 결과 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git add docs/data_us.json data/fin_us data/sp500.json
+          git diff --cached --quiet || git commit -m "S&P 500 순위 업데이트 $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M')"
+          git pull --rebase
+          git push
