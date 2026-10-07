@@ -72,8 +72,8 @@ section h2{font-size:17px;margin:0 0 8px}
 <div class="wrap">
   <header>
     <div class="eyebrow" id="stamp">MAGIC FORMULA · 불러오는 중…</div>
-    <h1>코스피·코스닥 시가총액 상위 300 마법공식 순위</h1>
-    <p class="lede">그린블라트 방식대로 ROC 순위와 이익수익률 순위를 각각 매기고, 두 순위를 더한 점수가 낮은 순서로 줄 세웠습니다. 금융·유틸리티·투자지주회사는 공식 원칙에 따라 순위에서 빼고 아래에 따로 적었습니다.</p>
+    <h1>코스피·코스닥·S&amp;P 500 마법공식 순위</h1>
+    <p class="lede">코스피·코스닥은 시가총액 상위 300개, 미국은 S&amp;P 500 전체를 대상으로 그린블라트 방식대로 ROC 순위와 이익수익률 순위를 각각 매기고, 두 순위를 더한 점수가 낮은 순서로 줄 세웠습니다. 금융·유틸리티·투자지주회사는 공식 원칙에 따라 순위에서 빼고 아래에 따로 적었습니다.</p>
   </header>
 
   <div class="formula">
@@ -86,6 +86,7 @@ section h2{font-size:17px;margin:0 0 8px}
     <div class="tabs" role="tablist">
       <button role="tab" id="t-KOSPI" aria-selected="true" data-m="KOSPI">코스피</button>
       <button role="tab" id="t-KOSDAQ" aria-selected="false" data-m="KOSDAQ">코스닥</button>
+      <button role="tab" id="t-SP500" aria-selected="false" data-m="SP500">S&amp;P 500</button>
     </div>
     <div class="ctrls">
       <input type="search" id="q" placeholder="종목명·업종 검색" aria-label="종목명 또는 업종 검색">
@@ -109,6 +110,8 @@ section h2{font-size:17px;margin:0 0 8px}
     <h2>읽는 법과 한계</h2>
     <ul class="notes">
       <li><b>금액 단위는 억원</b>이고 연결재무제표 기준입니다. 시가총액은 네이버 증권 시세, 재무는 네이버 증권(WiseReport) 분기 재무제표에서 가져옵니다. 장중(평일 9:00~15:30)에는 15분마다 시세를 새로 받아 순위를 다시 계산하고, 재무제표는 매일 아침 새로 받습니다. GitHub 예약 실행 특성상 몇 분씩 늦어질 수 있습니다.</li>
+      <li><b>S&amp;P 500 탭은 금액 단위가 십억 달러</b>입니다. 재무와 시세는 Yahoo Finance, 구성종목과 GICS 업종은 위키백과 S&amp;P 500 목록에서 가져옵니다. 같은 회사의 여러 주식 종류(GOOGL/GOOG, FOXA/FOX, NWSA/NWS)는 한 회사로 묶어 503개 종목이 약 500개 회사가 됩니다. 금융·유틸리티·부동산(리츠) 섹터는 그린블라트 원칙대로 제외합니다. 미국 장중(한국시간 밤 10:30~새벽 5:00)에 15분마다 시세를 반영합니다.</li>
+      <li><b>그린블라트 공식 사이트(magicformulainvesting.com)</b>는 무료 회원가입 후 상위 30~50개 종목 이름만 보여주고 수치는 공개하지 않습니다. 이 표는 같은 원칙(EBIT 기준 ROC·이익수익률, 금융·유틸리티 제외, 최근 12개월 실적)을 공개 데이터로 재현한 것이라 사이트 목록과 일부 다를 수 있습니다.</li>
       <li><b>EV가 0보다 작으면</b>(현금이 시가총액+부채보다 많음) 이익수익률을 ∞로 두고 가장 싼 쪽으로 쳤습니다.</li>
       <li><b>유형자산이 거의 없는 회사</b>(게임·플랫폼·엔터)는 ROC가 수백~수천 %로 나옵니다. 공식 그대로의 결과이며, 이런 업종이 상위에 몰리는 건 마법공식의 알려진 특징입니다.</li>
       <li><b>영업이익이 적자</b>인 종목도 빼지 않고 순위를 매겼으며 자연스럽게 하위로 갑니다.</li>
@@ -124,7 +127,9 @@ const COLS = [
   {k:5,t:"EBIT"},{k:6,t:"투하자본"},{k:7,t:"ROC %"},{k:8,t:"ROC순위"},{k:9,t:"EV"},
   {k:10,t:"이익수익률 %"},{k:11,t:"EY순위"},{k:12,t:"합산점수",cls:"score"}
 ];
-let mkt="KOSPI", sortK=0, sortDir=1;
+let mkt="KOSPI", sortK=0, sortDir=1, US=null, KR=null, stampKR="", stampUS="";
+const UNIT={KOSPI:"억원",KOSDAQ:"억원",SP500:"십억$"};
+const MONEY=[4,5,6,9];
 const nf=new Intl.NumberFormat("ko-KR");
 const num=v=>v==="inf"?Infinity:v==="-inf"?-Infinity:v;
 function fmt(v,k){
@@ -132,12 +137,13 @@ function fmt(v,k){
   if(v==="inf") return "∞";
   if(v==="-inf") return "−∞";
   if(k===7||k===10){const s=Math.abs(v)>=1000?nf.format(Math.round(v)):v.toFixed(1);return v<0?`<span class="neg">${s}</span>`:s;}
+  if(typeof v==="number"&&mkt==="SP500"&&MONEY.includes(k)){const s=nf.format(Math.round(v*10)/10);return v<0?`<span class="neg">${s}</span>`:s;}
   if(typeof v==="number") return v<0?`<span class="neg">${nf.format(v)}</span>`:nf.format(v);
   return v;
 }
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function head(){
-  document.getElementById("head").innerHTML=COLS.map(c=>`<th tabindex="0" data-k="${c.k}" class="${(c.cls||"").includes("l")?"l":""}" ${c.k===sortK?`aria-sort="${sortDir>0?"ascending":"descending"}"`:""}>${c.t}</th>`).join("");
+  document.getElementById("head").innerHTML=COLS.map(c=>`<th tabindex="0" data-k="${c.k}" class="${(c.cls||"").includes("l")?"l":""}" ${c.k===sortK?`aria-sort="${sortDir>0?"ascending":"descending"}"`:""}>${c.t}${MONEY.includes(c.k)?` <span class="sub">${UNIT[mkt]}</span>`:""}</th>`).join("");
   document.querySelectorAll("#head th").forEach(th=>{
     const go=()=>{const k=+th.dataset.k; if(k===sortK) sortDir=-sortDir; else {sortK=k; sortDir=[4,5,7,10].includes(k)?-1:1;} render();};
     th.onclick=go; th.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go();}};
@@ -146,7 +152,9 @@ function head(){
 function render(){
   head();
   const q=document.getElementById("q").value.trim().toLowerCase();
-  if(!D) return;
+  D=mkt==="SP500"?US:KR;
+  document.getElementById("stamp").textContent=mkt==="SP500"?stampUS:stampKR;
+  if(!D||!D[mkt]){document.getElementById("body").innerHTML="";document.getElementById("count").textContent="데이터 준비 중";return;}
   let rows=D[mkt].r.filter(r=>!q||(r[1]+" "+r[2]+" "+r[3]).toLowerCase().includes(q));
   rows.sort((a,b)=>{let x=num(a[sortK]),y=num(b[sortK]); if(typeof x==="string") return x.localeCompare(y,"ko")*sortDir; if(x===null)return 1; if(y===null)return -1; return (x-y)*sortDir || a[0]-b[0];});
   document.getElementById("body").innerHTML=rows.map(r=>`<tr class="${r[0]<=30?"top":""}">`+COLS.map(c=>{
@@ -165,15 +173,19 @@ document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{
   try{localStorage.setItem("mf-mkt",mkt)}catch(e){}
 });
 document.getElementById("q").oninput=render;
-try{const s=localStorage.getItem("mf-mkt"); if(s==="KOSPI"||s==="KOSDAQ"){mkt=s;document.querySelectorAll(".tabs button").forEach(o=>o.setAttribute("aria-selected",o.dataset.m===s));}}catch(e){}
+try{const s=localStorage.getItem("mf-mkt"); if(UNIT[s]){mkt=s;document.querySelectorAll(".tabs button").forEach(o=>o.setAttribute("aria-selected",o.dataset.m===s));}}catch(e){}
+async function getJSON(f){const r=await fetch(f+"?t="+Date.now(),{cache:"no-store"}); if(!r.ok) throw 0; return r.json();}
 async function load(){
   try{
-    const res=await fetch("data.json?t="+Date.now(),{cache:"no-store"});
-    const j=await res.json(); D=j.markets;
-    const bs=(D.KOSPI.bs||"").replace("/","년 ")+"월말";
-    document.getElementById("stamp").textContent=`MAGIC FORMULA · ${j.updated} KST 시세 기준 · 재무 ${bs} · 코스피 ${D.KOSPI.total}개·코스닥 ${D.KOSDAQ.total}개 중 상위 300`;
-    render();
-  }catch(e){document.getElementById("stamp").textContent="데이터를 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.";}
+    const j=await getJSON("data.json"); KR=j.markets;
+    const bs=(KR.KOSPI.bs||"").replace("/","년 ")+"월말";
+    stampKR=`MAGIC FORMULA · ${j.updated} KST 시세 기준 · 재무 ${bs} · 코스피 ${KR.KOSPI.total}개·코스닥 ${KR.KOSDAQ.total}개 중 상위 300`;
+  }catch(e){stampKR="한국 데이터를 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.";}
+  try{
+    const j=await getJSON("data_us.json"); US=j.markets;
+    stampUS=`MAGIC FORMULA · ${j.updated} KST 시세 기준 · 재무 최근 분기 (~${US.SP500.bs}) · S&P 500 ${US.SP500.total}개 회사`;
+  }catch(e){stampUS="S&P 500 데이터를 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.";}
+  render();
 }
 load(); setInterval(load,5*60*1000);
 </script>
