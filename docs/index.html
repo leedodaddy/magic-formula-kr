@@ -33,9 +33,9 @@ h1{font-size:28px;line-height:1.25;margin:0;font-weight:700;text-wrap:balance}
 .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
 .tabs{display:inline-flex;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--panel)}
 .tabs button{font:inherit;font-weight:500;border:0;background:transparent;color:var(--muted);padding:8px 18px;cursor:pointer}
-.tabs button[aria-selected="true"]{background:var(--accent);color:#fff}
-:root[data-theme="dark"] .tabs button[aria-selected="true"]{color:#0b1512}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tabs button[aria-selected="true"]{color:#0b1512}}
+.tabs button[aria-selected="true"],.tabs button[aria-pressed="true"]{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .tabs button[aria-selected="true"],:root[data-theme="dark"] .tabs button[aria-pressed="true"]{color:#0b1512}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tabs button[aria-selected="true"],:root:not([data-theme="light"]) .tabs button[aria-pressed="true"]{color:#0b1512}}
 .ctrls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 input[type=search]{font:inherit;padding:7px 10px;border:1px solid var(--rule);border-radius:6px;background:var(--panel);color:var(--ink);width:220px;max-width:100%}
 button:focus-visible,input:focus-visible,th:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -80,6 +80,7 @@ section h2{font-size:17px;margin:0 0 8px}
   <div class="formula">
     <div class="fx"><b>좋은 회사 · 자본수익률 (ROC)</b><code>EBIT ÷ (순운전자본 + 유형자산)</code><span>순운전자본 = (유동자산−현금성자산) − (유동부채−단기차입금), 음수면 0</span></div>
     <div class="fx"><b>싼 가격 · 이익수익률 (EY)</b><code>EBIT ÷ EV</code><span>EV = 시가총액(보통주+우선주) + 이자발생부채 − 현금성자산 + 비지배지분</span></div>
+    <div class="fx"><b>성장 반영 (선택)</b><code>ROC순위 + EY순위 + 성장률순위</code><span>성장률 = 최근 4분기 영업이익 ÷ 약 3년 전 연간 영업이익의 연평균 증가율</span></div>
     <div class="fx"><b>EBIT</b><code>최근 4분기 영업이익 합</code><span>신규상장 등 분기 자료가 없으면 2025년 연간 영업이익</span></div>
   </div>
 
@@ -91,6 +92,10 @@ section h2{font-size:17px;margin:0 0 8px}
       <button role="tab" id="t-US2500" aria-selected="false" data-m="US2500">미국 2500</button>
     </div>
     <div class="ctrls">
+      <div class="tabs mode" role="group" aria-label="순위 방식">
+        <button type="button" id="m-basic" aria-pressed="true" data-mode="basic">기본 마법공식</button>
+        <button type="button" id="m-growth" aria-pressed="false" data-mode="growth">성장 반영</button>
+      </div>
       <input type="search" id="q" placeholder="종목명·업종 검색" aria-label="종목명 또는 업종 검색">
       <span class="count" id="count"></span>
     </div>
@@ -115,6 +120,7 @@ section h2{font-size:17px;margin:0 0 8px}
       <li><b>S&amp;P 500 탭은 금액 단위가 십억 달러</b>입니다. 재무와 시세는 Yahoo Finance, 구성종목과 GICS 업종은 위키백과 S&amp;P 500 목록에서 가져옵니다. 같은 회사의 여러 주식 종류(GOOGL/GOOG, FOXA/FOX, NWSA/NWS)는 한 회사로 묶어 503개 종목이 약 500개 회사가 됩니다. 금융·유틸리티·부동산(리츠) 섹터는 그린블라트 원칙대로 제외합니다. 건강보험사(유나이티드헬스, 시그나, 센틴, CVS 등)는 GICS상 헬스케어 섹터라 순위에 두고 <span class="pill tag">건강보험</span> 표시만 붙였습니다. 보험료로 굴리는 투자자산이 있어 ROC가 실제보다 높게 나올 수 있습니다. 엘레번스와 휴매나는 재무제표에 유동자산 구분이 없어 계산하지 못했습니다. 미국 장중(한국시간 밤 10:30~새벽 5:00)에 15분마다 시세를 반영합니다.</li>
       <li><b>미국 2500 탭</b>은 그린블라트 공식 사이트처럼 시가총액 하한을 두고 미국 상장사 전체에서 고릅니다. Nasdaq 종목 검색에서 미국 기업 보통주를 시가총액 순으로 2,500개 고르고(외국 기업 ADR, 워런트, 우선주 제외), Yahoo 업종 기준으로 금융·유틸리티·부동산을 뺍니다. 재무제표는 매일 가장 오래된 것부터 나눠서 새로 받아 약 1주일에 한 바퀴 갱신됩니다.</li>
       <li><b>그린블라트 공식 사이트(magicformulainvesting.com)</b>는 무료 회원가입 후 상위 30~50개 종목 이름만 보여주고 수치는 공개하지 않습니다. 이 표는 같은 원칙(EBIT 기준 ROC·이익수익률, 금융·유틸리티 제외, 최근 12개월 실적)을 공개 데이터로 재현한 것이라 사이트 목록과 일부 다를 수 있습니다.</li>
+      <li><b>성장 반영 순위</b>는 그린블라트 원래 공식이 아니라, 2010년 이후 이익이 빠르게 느는 대형 성장주를 놓친다는 약점을 보완해 보려고 추가한 실험적 점수입니다. 과거 데이터로 검증하지 않았습니다. 적자에서 흑자로 돌아선 회사는 성장률을 계산할 수 없어 중간 순위로, 지금 적자인 회사는 맨 아래로 둡니다.</li>
       <li><b>EV가 0보다 작으면</b>(현금이 시가총액+부채보다 많음) 이익수익률을 ∞로 두고 가장 싼 쪽으로 쳤습니다.</li>
       <li><b>유형자산이 거의 없는 회사</b>(게임·플랫폼·엔터)는 ROC가 수백~수천 %로 나옵니다. 공식 그대로의 결과이며, 이런 업종이 상위에 몰리는 건 마법공식의 알려진 특징입니다.</li>
       <li><b>영업이익이 적자</b>인 종목도 빼지 않고 순위를 매겼으며 자연스럽게 하위로 갑니다.</li>
@@ -125,11 +131,17 @@ section h2{font-size:17px;margin:0 0 8px}
 
 <script>
 let D = null;
-const COLS = [
+const BASIC = [
   {k:0,t:"순위",cls:"rk"},{k:1,t:"종목",cls:"nm l"},{k:3,t:"업종",cls:"sec l"},{k:4,t:"시가총액"},
   {k:5,t:"EBIT"},{k:6,t:"투하자본"},{k:7,t:"ROC %"},{k:8,t:"ROC순위"},{k:9,t:"EV"},
   {k:10,t:"이익수익률 %"},{k:11,t:"EY순위"},{k:12,t:"합산점수",cls:"score"}
 ];
+const GROWTH = [
+  {k:18,t:"순위",cls:"rk"},{k:1,t:"종목",cls:"nm l"},{k:3,t:"업종",cls:"sec l"},{k:4,t:"시가총액"},
+  {k:5,t:"EBIT"},{k:7,t:"ROC %"},{k:8,t:"ROC순위"},{k:10,t:"이익수익률 %"},{k:11,t:"EY순위"},
+  {k:15,t:"3년 성장률 %"},{k:16,t:"성장순위"},{k:0,t:"기본순위"},{k:17,t:"합산점수",cls:"score"}
+];
+let mode="basic", COLS=BASIC;
 let mkt="KOSPI", sortK=0, sortDir=1, US=null, KR=null, stampKR="", stampUS="";
 const UNIT={KOSPI:"억원",KOSDAQ:"억원",SP500:"십억$",US2500:"십억$"};
 let US25=null, stampUS25="";
@@ -140,7 +152,7 @@ function fmt(v,k){
   if(v===null||v===undefined) return "–";
   if(v==="inf") return "∞";
   if(v==="-inf") return "−∞";
-  if(k===7||k===10){const s=Math.abs(v)>=1000?nf.format(Math.round(v)):v.toFixed(1);return v<0?`<span class="neg">${s}</span>`:s;}
+  if(k===7||k===10||k===15){const s=Math.abs(v)>=1000?nf.format(Math.round(v)):v.toFixed(1);return v<0?`<span class="neg">${s}</span>`:s;}
   if(typeof v==="number"&&UNIT[mkt]==="십억$"&&MONEY.includes(k)){const s=nf.format(Math.round(v*10)/10);return v<0?`<span class="neg">${s}</span>`:s;}
   if(typeof v==="number") return v<0?`<span class="neg">${nf.format(v)}</span>`:nf.format(v);
   return v;
@@ -149,7 +161,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 function head(){
   document.getElementById("head").innerHTML=COLS.map(c=>`<th tabindex="0" data-k="${c.k}" class="${(c.cls||"").includes("l")?"l":""}" ${c.k===sortK?`aria-sort="${sortDir>0?"ascending":"descending"}"`:""}>${c.t}${MONEY.includes(c.k)?` <span class="sub">${UNIT[mkt]}</span>`:""}</th>`).join("");
   document.querySelectorAll("#head th").forEach(th=>{
-    const go=()=>{const k=+th.dataset.k; if(k===sortK) sortDir=-sortDir; else {sortK=k; sortDir=[4,5,7,10].includes(k)?-1:1;} render();};
+    const go=()=>{const k=+th.dataset.k; if(k===sortK) sortDir=-sortDir; else {sortK=k; sortDir=[4,5,7,10,15].includes(k)?-1:1;} render();};
     th.onclick=go; th.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go();}};
   });
 }
@@ -161,9 +173,10 @@ function render(){
   if(!D||!D[mkt]){document.getElementById("body").innerHTML="";document.getElementById("count").textContent="데이터 준비 중";return;}
   let rows=D[mkt].r.filter(r=>!q||(r[1]+" "+r[2]+" "+r[3]).toLowerCase().includes(q));
   rows.sort((a,b)=>{let x=num(a[sortK]),y=num(b[sortK]); if(typeof x==="string") return x.localeCompare(y,"ko")*sortDir; if(x===null)return 1; if(y===null)return -1; return (x-y)*sortDir || a[0]-b[0];});
-  document.getElementById("body").innerHTML=rows.map(r=>`<tr class="${r[0]<=30?"top":""}">`+COLS.map(c=>{
+  document.getElementById("body").innerHTML=rows.map(r=>`<tr class="${r[COLS[0].k]<=30?"top":""}">`+COLS.map(c=>{
     if(c.k===1) return `<td class="nm l">${esc(r[1])}<small>${r[2]}${r[13].startsWith("연간")?' · <span class="pill">연간EBIT</span>':""}${r[14]?` · <span class="pill tag">${esc(r[14])}</span>`:""}</small></td>`;
     if(c.k===3) return `<td class="sec l">${esc(r[3]||"")}</td>`;
+    if(c.k===15&&r[19]) return `<td><span class="pill">${esc(r[19])}</span></td>`;
     return `<td class="${c.cls||""}">${fmt(r[c.k],c.k)}</td>`;
   }).join("")+"</tr>").join("");
   const total=D[mkt].r.length;
@@ -172,12 +185,18 @@ function render(){
   document.getElementById("exh").textContent=`순위에서 제외한 종목 (${x.length}개)`;
   document.getElementById("excl").innerHTML=x.map(e=>`<li>${esc(e[0])}<span>${esc(e[4])}</span></li>`).join("");
 }
-document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{
-  mkt=b.dataset.m; document.querySelectorAll(".tabs button").forEach(o=>o.setAttribute("aria-selected",o===b)); render();
+document.querySelectorAll(".mode button").forEach(b=>b.onclick=()=>{
+  mode=b.dataset.mode; COLS=mode==="growth"?GROWTH:BASIC; sortK=COLS[0].k; sortDir=1;
+  document.querySelectorAll(".mode button").forEach(o=>o.setAttribute("aria-pressed",o===b)); render();
+  try{localStorage.setItem("mf-mode",mode)}catch(e){}
+});
+document.querySelectorAll(".tabs:not(.mode) button").forEach(b=>b.onclick=()=>{
+  mkt=b.dataset.m; document.querySelectorAll(".tabs:not(.mode) button").forEach(o=>o.setAttribute("aria-selected",o===b)); render();
   try{localStorage.setItem("mf-mkt",mkt)}catch(e){}
 });
 document.getElementById("q").oninput=render;
-try{const s=localStorage.getItem("mf-mkt"); if(UNIT[s]){mkt=s;document.querySelectorAll(".tabs button").forEach(o=>o.setAttribute("aria-selected",o.dataset.m===s));}}catch(e){}
+try{const s=localStorage.getItem("mf-mkt"); if(UNIT[s]){mkt=s;document.querySelectorAll(".tabs:not(.mode) button").forEach(o=>o.setAttribute("aria-selected",o.dataset.m===s));}}catch(e){}
+try{if(localStorage.getItem("mf-mode")==="growth"){mode="growth";COLS=GROWTH;sortK=18;document.getElementById("m-growth").setAttribute("aria-pressed","true");document.getElementById("m-basic").setAttribute("aria-pressed","false");}}catch(e){}
 async function getJSON(f){const r=await fetch(f+"?t="+Date.now(),{cache:"no-store"}); if(!r.ok) throw 0; return r.json();}
 async function load(){
   try{

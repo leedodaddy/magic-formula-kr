@@ -11,6 +11,8 @@ import pandas as pd
 import requests
 import yfinance as yf
 
+from growth import cagr, rank_growth
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIN_DIR = os.path.join(ROOT, "data", "fin_us")
 MEMBERS = os.path.join(ROOT, "data", "sp500.json")
@@ -132,6 +134,16 @@ def ttm(d):
     return None, None
 
 
+def us_growth(d, ebit):
+    """최근 4분기 영업이익과 약 3년 전 연간 영업이익으로 연평균 성장률"""
+    q = sorted((k for k, v in d.get("opq", {}).items() if v is not None), reverse=True)
+    y = sorted((k for k, v in d.get("opy", {}).items() if v is not None), reverse=True)
+    end = q[0] if len(q) >= 4 else (y[0] if y else None)
+    if end is None:
+        return None, "자료부족"
+    return cagr(ebit, end, d.get("opy", {}))
+
+
 def main():
     full = "--full" in sys.argv
     os.makedirs(FIN_DIR, exist_ok=True)
@@ -170,16 +182,23 @@ def main():
         tag = "건강보험" if m["industry"] == "Managed Health Care" or m["tickers"][0] in HEALTH_INS else ""
         ranked.append(dict(name=m["name"], tick=base[1], sector=base[2], industry=m["industry"], mcap=mcap, tag=tag,
                            ebit=ebit, capital=cap, ev=ev, basis=basis, bs=bs["date"],
+                           **dict(zip(("growth", "glabel"), us_growth(d, ebit))),
                            roc=ebit / cap if cap > 0 else (math.inf if ebit > 0 else -math.inf),
                            ey=ebit / ev if ev > 0 else (math.inf if ebit > 0 else -math.inf)))
     for k in ("roc", "ey"):
         for i, r in enumerate(sorted(ranked, key=lambda r: -r[k])):
             r[k + "_rank"] = i + 1
+    for r, g in zip(ranked, rank_growth([(r["growth"], r["glabel"]) for r in ranked])):
+        r["g_rank"] = g
+    for i, r in enumerate(sorted(ranked, key=lambda r: (r["roc_rank"] + r["ey_rank"] + r["g_rank"], r["ey_rank"]))):
+        r["rank3"] = i + 1
     ranked.sort(key=lambda r: (r["roc_rank"] + r["ey_rank"], r["ey_rank"]))
     pct = lambda v: (round(v * 100, 1) if math.isfinite(v) else ("inf" if v > 0 else "-inf"))
     b = lambda v: round(v / 1e9, 2)  # 십억 달러
     rows = [[i + 1, r["name"], r["tick"], r["sector"], b(r["mcap"]), b(r["ebit"]), b(r["capital"]), pct(r["roc"]),
-             r["roc_rank"], b(r["ev"]), pct(r["ey"]), r["ey_rank"], r["roc_rank"] + r["ey_rank"], r["basis"], r["tag"]]
+             r["roc_rank"], b(r["ev"]), pct(r["ey"]), r["ey_rank"], r["roc_rank"] + r["ey_rank"], r["basis"], r["tag"],
+             None if r["growth"] is None else round(r["growth"] * 100, 1), r["g_rank"],
+             r["roc_rank"] + r["ey_rank"] + r["g_rank"], r["rank3"], r["glabel"]]
             for i, r in enumerate(ranked)]
     out = {"updated": datetime.now(KST).strftime("%Y-%m-%d %H:%M"),
            "markets": {"SP500": {"total": len(members), "r": rows, "x": excluded,

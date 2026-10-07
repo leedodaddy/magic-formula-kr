@@ -9,6 +9,8 @@ from datetime import datetime, timezone, timedelta
 
 import requests
 
+from growth import cagr, rank_growth
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIN_DIR = os.path.join(ROOT, "data", "fin")
 OUT = os.path.join(ROOT, "docs", "data.json")
@@ -112,6 +114,7 @@ def compute(stock, pref_mcap, d):
         q = qa[-4:]
         ebit = sum(op[i] for i in q)
         basis = f"최근4분기 {iq['YYMM'][q[0]]}~{iq['YYMM'][q[-1]]}"
+        ebit_end = iq["YYMM"][q[-1]]
         eqi = sum(z(a(iq, "200220")[i]) for i in q)
         if ebit > 0 and eqi > 0.5 * ebit:
             return r, f"투자지주회사 (영업이익의 {eqi / ebit * 100:.0f}%가 지분법이익)"
@@ -123,10 +126,14 @@ def compute(stock, pref_mcap, d):
             return r, "영업이익 없음"
         ebit = opy[ya[-1]]
         basis = f"연간 {iy['YYMM'][ya[-1]]}"
+        ebit_end = iy["YYMM"][ya[-1]]
 
+    iy = d["isy"]
+    annual = {y: v for y, v in zip(iy["YYMM"], a(iy, "201370")) if "(E)" not in y}
+    growth, glabel = cagr(ebit, ebit_end, annual)
     ev = stock["mcap"] + pref_mcap + z(nd) + z(a(bs, "120620")[b])
     cap = nwc + nfa
-    r.update(ebit=ebit, capital=cap, ev=ev, basis=basis, bs=bs["YYMM"][b],
+    r.update(ebit=ebit, capital=cap, growth=growth, glabel=glabel, ev=ev, basis=basis, bs=bs["YYMM"][b],
              roc=ebit / cap if cap > 0 else (math.inf if ebit > 0 else -math.inf),
              ey=ebit / ev if ev > 0 else (math.inf if ebit > 0 else -math.inf))
     return r, None
@@ -158,11 +165,17 @@ def main():
         for k in ("roc", "ey"):
             for i, r in enumerate(sorted(ranked, key=lambda r: -r[k])):
                 r[k + "_rank"] = i + 1
+        for r, g in zip(ranked, rank_growth([(r["growth"], r["glabel"]) for r in ranked])):
+            r["g_rank"] = g
+        for i, r in enumerate(sorted(ranked, key=lambda r: (r["roc_rank"] + r["ey_rank"] + r["g_rank"], r["ey_rank"]))):
+            r["rank3"] = i + 1
         ranked.sort(key=lambda r: (r["roc_rank"] + r["ey_rank"], r["ey_rank"]))
         pct = lambda v: (round(v * 100, 1) if math.isfinite(v) else ("inf" if v > 0 else "-inf"))
         rows = [[i + 1, r["name"], r["code"], r["wics"], round(r["mcap"]), round(r["ebit"]), round(r["capital"]),
                  pct(r["roc"]), r["roc_rank"], round(r["ev"]), pct(r["ey"]), r["ey_rank"],
-                 r["roc_rank"] + r["ey_rank"], r["basis"]] for i, r in enumerate(ranked)]
+                 r["roc_rank"] + r["ey_rank"], r["basis"], "",
+                 None if r["growth"] is None else round(r["growth"] * 100, 1), r["g_rank"],
+                 r["roc_rank"] + r["ey_rank"] + r["g_rank"], r["rank3"], r["glabel"]] for i, r in enumerate(ranked)]
         result["markets"][market] = {"total": len(common), "r": rows, "x": excluded,
                                      "bs": max((r["bs"] for r in ranked), default=None)}
         print(market, "common", len(common), "ranked", len(rows), "excluded", len(excluded))
