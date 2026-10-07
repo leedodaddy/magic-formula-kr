@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>마법공식 순위표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F5F6F2; --panel:#FFFFFF; --ink:#1B2220; --muted:#66706B; --rule:#DCE1DA; --soft:#ECEFE9;
+  --accent:#0E6656; --accent-soft:#DCEDE7; --neg:#B0412C; --gold:#8A6A12; --gold-soft:#F3EBD2;
+  --sans:"IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--bg:#121614;--panel:#191E1C;--ink:#E6EBE8;--muted:#95A09A;--rule:#2C3431;--soft:#202725;
+  --accent:#4FC2A6;--accent-soft:#1C3530;--neg:#E8826C;--gold:#D9B95A;--gold-soft:#332C17;}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--bg:#121614;--panel:#191E1C;--ink:#E6EBE8;--muted:#95A09A;--rule:#2C3431;--soft:#202725;
+  --accent:#4FC2A6;--accent-soft:#1C3530;--neg:#E8826C;--gold:#D9B95A;--gold-soft:#332C17;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:28px 56px;display:grid;gap:22px}
+header{display:grid;gap:8px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+h1{font-size:28px;line-height:1.25;margin:0;font-weight:700;text-wrap:balance}
+.lede{margin:0;color:var(--muted);max-width:68ch}
+.formula{display:flex;flex-wrap:wrap;gap:10px}
+.fx{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:10px 14px;display:grid;gap:2px;flex:1 1 260px}
+.fx b{font-size:13px}
+.fx code{font-family:var(--mono);font-size:12.5px;color:var(--accent)}
+.fx span{font-size:12px;color:var(--muted)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.tabs{display:inline-flex;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--panel)}
+.tabs button{font:inherit;font-weight:500;border:0;background:transparent;color:var(--muted);padding:8px 18px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .tabs button[aria-selected="true"]{color:#0b1512}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tabs button[aria-selected="true"]{color:#0b1512}}
+.ctrls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input[type=search]{font:inherit;padding:7px 10px;border:1px solid var(--rule);border-radius:6px;background:var(--panel);color:var(--ink);width:220px;max-width:100%}
+button:focus-visible,input:focus-visible,th:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.count{font-size:12.5px;color:var(--muted)}
+.tablebox{overflow-x:auto;background:var(--panel);border:1px solid var(--rule);border-radius:6px}
+table{border-collapse:collapse;width:100%;min-width:920px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--soft)}
+th{position:sticky;top:0;background:var(--panel);font-size:12px;font-weight:500;color:var(--muted);border-bottom:1px solid var(--rule);cursor:pointer;user-select:none}
+th.l,td.l{text-align:left}
+th[aria-sort] ::after{content:""}
+th[aria-sort="ascending"]::after{content:" ▲";color:var(--accent)}
+th[aria-sort="descending"]::after{content:" ▼";color:var(--accent)}
+td{font-family:var(--mono);font-size:12.5px}
+td.nm{font-family:var(--sans);font-size:13.5px;font-weight:500}
+td.nm small{display:block;font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:400}
+td.sec{font-family:var(--sans);font-size:12.5px;color:var(--muted)}
+td.rk{font-weight:500}
+tr.top td.rk{color:var(--gold)}
+tr.top{background:var(--gold-soft)}
+td.score{color:var(--accent);font-weight:500}
+.neg{color:var(--neg)}
+.sub{color:var(--muted);font-size:11px}
+.pill{display:inline-block;font-family:var(--sans);font-size:11px;padding:1px 7px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+section h2{font-size:17px;margin:0 0 8px}
+.excl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 18px;margin:0;padding:0;list-style:none}
+.excl li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--rule);padding:5px 0;font-size:13px}
+.excl li span{color:var(--muted);font-size:12px;text-align:right}
+.notes{display:grid;gap:6px;max-width:80ch;color:var(--muted);font-size:13px;margin:0;padding-left:18px}
+.notes b{color:var(--ink);font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow" id="stamp">MAGIC FORMULA · 불러오는 중…</div>
+    <h1>코스피·코스닥 시가총액 상위 300 마법공식 순위</h1>
+    <p class="lede">그린블라트 방식대로 ROC 순위와 이익수익률 순위를 각각 매기고, 두 순위를 더한 점수가 낮은 순서로 줄 세웠습니다. 금융·유틸리티·투자지주회사는 공식 원칙에 따라 순위에서 빼고 아래에 따로 적었습니다.</p>
+  </header>
+
+  <div class="formula">
+    <div class="fx"><b>좋은 회사 · 자본수익률 (ROC)</b><code>EBIT ÷ (순운전자본 + 유형자산)</code><span>순운전자본 = (유동자산−현금성자산) − (유동부채−단기차입금), 음수면 0</span></div>
+    <div class="fx"><b>싼 가격 · 이익수익률 (EY)</b><code>EBIT ÷ EV</code><span>EV = 시가총액(보통주+우선주) + 이자발생부채 − 현금성자산 + 비지배지분</span></div>
+    <div class="fx"><b>EBIT</b><code>최근 4분기 영업이익 합</code><span>신규상장 등 분기 자료가 없으면 2025년 연간 영업이익</span></div>
+  </div>
+
+  <div class="bar">
+    <div class="tabs" role="tablist">
+      <button role="tab" id="t-KOSPI" aria-selected="true" data-m="KOSPI">코스피</button>
+      <button role="tab" id="t-KOSDAQ" aria-selected="false" data-m="KOSDAQ">코스닥</button>
+    </div>
+    <div class="ctrls">
+      <input type="search" id="q" placeholder="종목명·업종 검색" aria-label="종목명 또는 업종 검색">
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+
+  <div class="tablebox">
+    <table>
+      <thead><tr id="head"></tr></thead>
+      <tbody id="body"></tbody>
+    </table>
+  </div>
+
+  <section>
+    <h2 id="exh">순위에서 제외한 종목</h2>
+    <ul class="excl" id="excl"></ul>
+  </section>
+
+  <section>
+    <h2>읽는 법과 한계</h2>
+    <ul class="notes">
+      <li><b>금액 단위는 억원</b>이고 연결재무제표 기준입니다. 시가총액은 네이버 증권 시세, 재무는 네이버 증권(WiseReport) 분기 재무제표에서 가져옵니다. 장중(평일 9:00~15:30)에는 15분마다 시세를 새로 받아 순위를 다시 계산하고, 재무제표는 매일 아침 새로 받습니다. GitHub 예약 실행 특성상 몇 분씩 늦어질 수 있습니다.</li>
+      <li><b>EV가 0보다 작으면</b>(현금이 시가총액+부채보다 많음) 이익수익률을 ∞로 두고 가장 싼 쪽으로 쳤습니다.</li>
+      <li><b>유형자산이 거의 없는 회사</b>(게임·플랫폼·엔터)는 ROC가 수백~수천 %로 나옵니다. 공식 그대로의 결과이며, 이런 업종이 상위에 몰리는 건 마법공식의 알려진 특징입니다.</li>
+      <li><b>영업이익이 적자</b>인 종목도 빼지 않고 순위를 매겼으며 자연스럽게 하위로 갑니다.</li>
+      <li>최근 4분기에 일회성 이익이 크게 들어간 회사는 실제보다 좋아 보일 수 있습니다. 상위 종목은 사업보고서로 한 번 더 확인하세요. 투자 권유가 아닌 교육·연구용 자료입니다.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+let D = null;
+const COLS = [
+  {k:0,t:"순위",cls:"rk"},{k:1,t:"종목",cls:"nm l"},{k:3,t:"업종",cls:"sec l"},{k:4,t:"시가총액"},
+  {k:5,t:"EBIT"},{k:6,t:"투하자본"},{k:7,t:"ROC %"},{k:8,t:"ROC순위"},{k:9,t:"EV"},
+  {k:10,t:"이익수익률 %"},{k:11,t:"EY순위"},{k:12,t:"합산점수",cls:"score"}
+];
+let mkt="KOSPI", sortK=0, sortDir=1;
+const nf=new Intl.NumberFormat("ko-KR");
+const num=v=>v==="inf"?Infinity:v==="-inf"?-Infinity:v;
+function fmt(v,k){
+  if(v===null||v===undefined) return "–";
+  if(v==="inf") return "∞";
+  if(v==="-inf") return "−∞";
+  if(k===7||k===10){const s=Math.abs(v)>=1000?nf.format(Math.round(v)):v.toFixed(1);return v<0?`<span class="neg">${s}</span>`:s;}
+  if(typeof v==="number") return v<0?`<span class="neg">${nf.format(v)}</span>`:nf.format(v);
+  return v;
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function head(){
+  document.getElementById("head").innerHTML=COLS.map(c=>`<th tabindex="0" data-k="${c.k}" class="${(c.cls||"").includes("l")?"l":""}" ${c.k===sortK?`aria-sort="${sortDir>0?"ascending":"descending"}"`:""}>${c.t}</th>`).join("");
+  document.querySelectorAll("#head th").forEach(th=>{
+    const go=()=>{const k=+th.dataset.k; if(k===sortK) sortDir=-sortDir; else {sortK=k; sortDir=[4,5,7,10].includes(k)?-1:1;} render();};
+    th.onclick=go; th.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go();}};
+  });
+}
+function render(){
+  head();
+  const q=document.getElementById("q").value.trim().toLowerCase();
+  if(!D) return;
+  let rows=D[mkt].r.filter(r=>!q||(r[1]+" "+r[2]+" "+r[3]).toLowerCase().includes(q));
+  rows.sort((a,b)=>{let x=num(a[sortK]),y=num(b[sortK]); if(typeof x==="string") return x.localeCompare(y,"ko")*sortDir; if(x===null)return 1; if(y===null)return -1; return (x-y)*sortDir || a[0]-b[0];});
+  document.getElementById("body").innerHTML=rows.map(r=>`<tr class="${r[0]<=30?"top":""}">`+COLS.map(c=>{
+    if(c.k===1) return `<td class="nm l">${esc(r[1])}<small>${r[2]}${r[13].startsWith("연간")?' · <span class="pill">연간EBIT</span>':""}</small></td>`;
+    if(c.k===3) return `<td class="sec l">${esc(r[3]||"")}</td>`;
+    return `<td class="${c.cls||""}">${fmt(r[c.k],c.k)}</td>`;
+  }).join("")+"</tr>").join("");
+  const total=D[mkt].r.length;
+  document.getElementById("count").textContent=q?`${rows.length} / ${total}개`:`순위 ${total}개 · 상위 30개 강조`;
+  const x=D[mkt].x;
+  document.getElementById("exh").textContent=`순위에서 제외한 종목 (${x.length}개)`;
+  document.getElementById("excl").innerHTML=x.map(e=>`<li>${esc(e[0])}<span>${esc(e[4])}</span></li>`).join("");
+}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{
+  mkt=b.dataset.m; document.querySelectorAll(".tabs button").forEach(o=>o.setAttribute("aria-selected",o===b)); render();
+  try{localStorage.setItem("mf-mkt",mkt)}catch(e){}
+});
+document.getElementById("q").oninput=render;
+try{const s=localStorage.getItem("mf-mkt"); if(s==="KOSPI"||s==="KOSDAQ"){mkt=s;document.querySelectorAll(".tabs button").forEach(o=>o.setAttribute("aria-selected",o.dataset.m===s));}}catch(e){}
+async function load(){
+  try{
+    const res=await fetch("data.json?t="+Date.now(),{cache:"no-store"});
+    const j=await res.json(); D=j.markets;
+    const bs=(D.KOSPI.bs||"").replace("/","년 ")+"월말";
+    document.getElementById("stamp").textContent=`MAGIC FORMULA · ${j.updated} KST 시세 기준 · 재무 ${bs} · 코스피 ${D.KOSPI.total}개·코스닥 ${D.KOSDAQ.total}개 중 상위 300`;
+    render();
+  }catch(e){document.getElementById("stamp").textContent="데이터를 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.";}
+}
+load(); setInterval(load,5*60*1000);
+</script>
+
+</body>
+</html>
