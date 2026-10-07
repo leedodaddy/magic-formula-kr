@@ -19,6 +19,9 @@ KST = timezone(timedelta(hours=9))
 
 # 그린블라트 원칙: 금융·유틸리티 제외 (리츠는 2016년 전까지 금융 섹터였으므로 함께 제외)
 EXCL_SECT = {"Financials": "금융", "Utilities": "유틸리티", "Real Estate": "부동산·리츠"}
+# GICS상 헬스케어지만 건강보험 사업을 하는 회사 (순위에는 두고 표시만 함)
+HEALTH_INS = {"CI", "CVS"}
+
 SECTOR_KO = {"Industrials": "산업재", "Information Technology": "IT", "Health Care": "헬스케어",
              "Consumer Discretionary": "경기소비재", "Consumer Staples": "필수소비재", "Materials": "소재",
              "Communication Services": "커뮤니케이션", "Energy": "에너지", "Financials": "금융",
@@ -154,7 +157,8 @@ def main():
         nwc = max(0.0, (bs["ca"] - z(bs["cash"])) - (bs["cl"] - z(bs["stdebt"])))
         cap = nwc + z(bs["ppe"])
         ev = mcap + z(bs["preferred"]) + z(bs["debt"]) - z(bs["cash"]) + z(bs["minority"])
-        ranked.append(dict(name=m["name"], tick=base[1], sector=base[2], industry=m["industry"], mcap=mcap,
+        tag = "건강보험" if m["industry"] == "Managed Health Care" or m["tickers"][0] in HEALTH_INS else ""
+        ranked.append(dict(name=m["name"], tick=base[1], sector=base[2], industry=m["industry"], mcap=mcap, tag=tag,
                            ebit=ebit, capital=cap, ev=ev, basis=basis, bs=bs["date"],
                            roc=ebit / cap if cap > 0 else (math.inf if ebit > 0 else -math.inf),
                            ey=ebit / ev if ev > 0 else (math.inf if ebit > 0 else -math.inf)))
@@ -165,7 +169,7 @@ def main():
     pct = lambda v: (round(v * 100, 1) if math.isfinite(v) else ("inf" if v > 0 else "-inf"))
     b = lambda v: round(v / 1e9, 2)  # 십억 달러
     rows = [[i + 1, r["name"], r["tick"], r["sector"], b(r["mcap"]), b(r["ebit"]), b(r["capital"]), pct(r["roc"]),
-             r["roc_rank"], b(r["ev"]), pct(r["ey"]), r["ey_rank"], r["roc_rank"] + r["ey_rank"], r["basis"]]
+             r["roc_rank"], b(r["ev"]), pct(r["ey"]), r["ey_rank"], r["roc_rank"] + r["ey_rank"], r["basis"], r["tag"]]
             for i, r in enumerate(ranked)]
     out = {"updated": datetime.now(KST).strftime("%Y-%m-%d %H:%M"),
            "markets": {"SP500": {"total": len(members), "r": rows, "x": excluded,
