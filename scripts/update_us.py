@@ -53,6 +53,15 @@ def num(v):
     return None if v is None or (isinstance(v, float) and math.isnan(v)) else float(v)
 
 
+def fetch_profile(t):
+    """Yahoo 업종·국가 (2500 목록에서 금융·유틸리티를 거를 때 사용)"""
+    try:
+        info = t.info
+        return {"ysector": info.get("sector"), "yindustry": info.get("industry"), "country": info.get("country")}
+    except Exception:
+        return {}
+
+
 def fetch_fin(tickers):
     t = yf.Ticker(tickers[0])
     for attempt in range(3):
@@ -89,6 +98,7 @@ def fetch_fin(tickers):
             mcap, price = fi["marketCap"], fi["lastPrice"]
             out["shares"] = mcap / price if mcap and price else None  # 시세 반영용 환산 주식수
             out["mcap"] = mcap
+            out.update(fetch_profile(t))
             return out
         except Exception as e:
             err = str(e)

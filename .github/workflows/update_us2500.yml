@@ -1,0 +1,42 @@
+name: 미국 2500 순위 업데이트
+
+on:
+  schedule:
+    - cron: "10,40 13-20 * * 1-5"  # 미국 장중 30분마다 시가총액 반영
+    - cron: "30 11 * * 1-5"        # 평일 KST 20:30 가장 오래된 재무제표 400개 새로 받기
+  workflow_dispatch:
+    inputs:
+      refresh:
+        description: "새로 받을 재무제표 개수 (0이면 시세만)"
+        default: "0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas lxml yfinance
+      - name: 순위 계산
+        run: |
+          N="${{ inputs.refresh }}"
+          if [ "${{ github.event.schedule }}" = "30 11 * * 1-5" ]; then N=400; fi
+          python scripts/update_us2500.py --refresh "${N:-0}"
+      - name: 결과 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git add docs/data_us2500.json data/fin_us data/us2500.json
+          git diff --cached --quiet || git commit -m "미국 2500 순위 업데이트 $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M')"
+          git pull --rebase
+          git push
