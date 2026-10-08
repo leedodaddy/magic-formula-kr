@@ -1017,14 +1017,6 @@
 "industry": "Transaction & Payment Processing Services"
 },
 {
-"name": "Corteva",
-"tickers": [
-"CTVA"
-],
-"sector": "Materials",
-"industry": "Fertilizers & Agricultural Chemicals"
-},
-{
 "name": "CoStar Group",
 "tickers": [
 "CSGP"
@@ -2845,7 +2837,7 @@
 {
 "name": "Paramount Skydance Corporation",
 "tickers": [
-"PSKY"
+"SKYD"
 ],
 "sector": "Communication Services",
 "industry": "Movies & Entertainment"
@@ -3587,6 +3579,14 @@
 "industry": "Diversified Banks"
 },
 {
+"name": "Twilio",
+"tickers": [
+"TWLO"
+],
+"sector": "Information Technology",
+"industry": "Systems Software"
+},
+{
 "name": "Tyler Technologies",
 "tickers": [
 "TYL"
@@ -3803,6 +3803,14 @@
 "industry": "Construction Materials"
 },
 {
+"name": "Vylor",
+"tickers": [
+"VYLR"
+],
+"sector": "Consumer Staples",
+"industry": "Agricultural Products & Services"
+},
+{
 "name": "W. R. Berkley Corporation",
 "tickers": [
 "WRB"
@@ -3841,14 +3849,6 @@
 ],
 "sector": "Communication Services",
 "industry": "Movies & Entertainment"
-},
-{
-"name": "Warner Bros. Discovery",
-"tickers": [
-"WBD"
-],
-"sector": "Communication Services",
-"industry": "Broadcasting"
 },
 {
 "name": "Waste Management",
