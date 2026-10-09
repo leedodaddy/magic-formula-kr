@@ -2835,14 +2835,6 @@
 "industry": "Systems Software"
 },
 {
-"name": "Paramount Skydance Corporation",
-"tickers": [
-"SKYD"
-],
-"sector": "Communication Services",
-"industry": "Movies & Entertainment"
-},
-{
 "name": "Parker Hannifin",
 "tickers": [
 "PH"
@@ -3265,6 +3257,14 @@
 ],
 "sector": "Real Estate",
 "industry": "Retail REITs"
+},
+{
+"name": "Skydance Corporation",
+"tickers": [
+"SKYD"
+],
+"sector": "Communication Services",
+"industry": "Movies & Entertainment"
 },
 {
 "name": "Skyworks Solutions",
