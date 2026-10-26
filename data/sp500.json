@@ -3011,12 +3011,12 @@
 "industry": "Homebuilding"
 },
 {
-"name": "Quanta Services",
+"name": "Qnity Electronics",
 "tickers": [
-"PWR"
+"Q"
 ],
-"sector": "Industrials",
-"industry": "Construction & Engineering"
+"sector": "Information Technology",
+"industry": "Semiconductor Materials & Equipment"
 },
 {
 "name": "Qualcomm",
@@ -3027,20 +3027,20 @@
 "industry": "Semiconductors"
 },
 {
+"name": "Quanta Services",
+"tickers": [
+"PWR"
+],
+"sector": "Industrials",
+"industry": "Construction & Engineering"
+},
+{
 "name": "Quest Diagnostics",
 "tickers": [
 "DGX"
 ],
 "sector": "Health Care",
 "industry": "Health Care Services"
-},
-{
-"name": "Qnity Electronics",
-"tickers": [
-"Q"
-],
-"sector": "Information Technology",
-"industry": "Semiconductor Materials & Equipment"
 },
 {
 "name": "Ralph Lauren Corporation",
@@ -3065,14 +3065,6 @@
 ],
 "sector": "Communication Services",
 "industry": "Interactive Media & Services"
-},
-{
-"name": "RTX Corporation",
-"tickers": [
-"RTX"
-],
-"sector": "Industrials",
-"industry": "Aerospace & Defense"
 },
 {
 "name": "Realty Income",
@@ -3179,6 +3171,14 @@
 "industry": "Hotels, Resorts & Cruise Lines"
 },
 {
+"name": "RTX Corporation",
+"tickers": [
+"RTX"
+],
+"sector": "Industrials",
+"industry": "Aerospace & Defense"
+},
+{
 "name": "S&P Global",
 "tickers": [
 "SPGI"
@@ -3259,7 +3259,7 @@
 "industry": "Retail REITs"
 },
 {
-"name": "Skydance Corporation",
+"name": "Skydance",
 "tickers": [
 "SKYD"
 ],
