@@ -2979,20 +2979,20 @@
 "industry": "Life & Health Insurance"
 },
 {
-"name": "Public Service Enterprise Group",
-"tickers": [
-"PEG"
-],
-"sector": "Utilities",
-"industry": "Electric Utilities"
-},
-{
 "name": "PTC Inc.",
 "tickers": [
 "PTC"
 ],
 "sector": "Information Technology",
 "industry": "Application Software"
+},
+{
+"name": "Public Service Enterprise Group",
+"tickers": [
+"PEG"
+],
+"sector": "Utilities",
+"industry": "Electric Utilities"
 },
 {
 "name": "Public Storage",
