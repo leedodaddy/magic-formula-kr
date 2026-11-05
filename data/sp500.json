@@ -2138,14 +2138,6 @@
 "industry": "Diversified Banks"
 },
 {
-"name": "Kenvue",
-"tickers": [
-"KVUE"
-],
-"sector": "Consumer Staples",
-"industry": "Personal Care Products"
-},
-{
 "name": "Keurig Dr Pepper",
 "tickers": [
 "KDP"
@@ -2753,6 +2745,14 @@
 ],
 "sector": "Energy",
 "industry": "Oil & Gas Exploration & Production"
+},
+{
+"name": "Okta, Inc.",
+"tickers": [
+"OKTA"
+],
+"sector": "Information Technology",
+"industry": "Application Software"
 },
 {
 "name": "Old Dominion",
