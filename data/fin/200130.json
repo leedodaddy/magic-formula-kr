@@ -1,0 +1,1 @@
+{"code":"200130","err":"HTTPSConnectionPool(host='navercomp.wisereport.co.kr', port=443): Max retries exceeded with url: /v2/company/c1010001.aspx?cmp_cd=200130 (Caused by ConnectTimeoutError(<HTTPSConnection(host='navercomp.wisereport.co.kr', port=443) at 0x75dd856ac320>, 'Connection to navercomp.wisereport.co.kr timed out. (connect timeout=20)'))"}
