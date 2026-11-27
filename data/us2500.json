@@ -83,7 +83,7 @@
 "tickers": [
 "ANT"
 ],
-"mcap": 1083445623974.0
+"mcap": 1094454184030.0
 },
 {
 "name": "Walmart Inc.",
@@ -520,18 +520,18 @@
 "mcap": 162217837241.0
 },
 {
-"name": "Analog Devices Inc.",
-"tickers": [
-"ADI"
-],
-"mcap": 161411179219.0
-},
-{
 "name": "Charles Schwab Corporation (The)",
 "tickers": [
 "SCHW"
 ],
 "mcap": 161312680109.0
+},
+{
+"name": "Analog Devices Inc.",
+"tickers": [
+"ADI"
+],
+"mcap": 160781926552.0
 },
 {
 "name": "TJX Companies Inc. (The)",
@@ -608,7 +608,7 @@
 "tickers": [
 "LOW"
 ],
-"mcap": 132195547957.0
+"mcap": 132194109968.0
 },
 {
 "name": "Boeing Company (The)",
@@ -1105,7 +1105,7 @@
 "tickers": [
 "TGT"
 ],
-"mcap": 78216269037.0
+"mcap": 77948614072.0
 },
 {
 "name": "Enterprise Products Partners L.P.",
@@ -1539,7 +1539,7 @@
 "tickers": [
 "ADSK"
 ],
-"mcap": 51578065000.0
+"mcap": 51331280000.0
 },
 {
 "name": "Entergy Corporation",
@@ -2471,7 +2471,7 @@
 "tickers": [
 "FE"
 ],
-"mcap": 27587161641.0
+"mcap": 27592723599.0
 },
 {
 "name": "PPG Industries Inc.",
@@ -3530,7 +3530,7 @@
 "tickers": [
 "BURL"
 ],
-"mcap": 15708195814.0
+"mcap": 15637071905.0
 },
 {
 "name": "News Corporation",
@@ -3608,7 +3608,7 @@
 "tickers": [
 "ARMK"
 ],
-"mcap": 15229618792.0
+"mcap": 15218118691.0
 },
 {
 "name": "Corebridge Financial Inc.",
@@ -4029,7 +4029,7 @@
 "tickers": [
 "BJ"
 ],
-"mcap": 12846204176.0
+"mcap": 12843392883.0
 },
 {
 "name": "Watsco Inc.",
@@ -6280,7 +6280,7 @@
 "tickers": [
 "CMC"
 ],
-"mcap": 6289085811.0
+"mcap": 6285221649.0
 },
 {
 "name": "Cogent Biosciences Inc.",
@@ -6392,7 +6392,7 @@
 "tickers": [
 "AMTM"
 ],
-"mcap": 6083319555.0
+"mcap": 6091263366.0
 },
 {
 "name": "NOV Inc.",
@@ -6864,13 +6864,6 @@
 "mcap": 5381612314.0
 },
 {
-"name": "Dycom Industries Inc.",
-"tickers": [
-"DY"
-],
-"mcap": 5355228720.0
-},
-{
 "name": "PriceSmart Inc.",
 "tickers": [
 "PSMT"
@@ -6925,6 +6918,13 @@
 "MMED"
 ],
 "mcap": 5300632700.0
+},
+{
+"name": "Dycom Industries Inc.",
+"tickers": [
+"DY"
+],
+"mcap": 5294924473.0
 },
 {
 "name": "BILL Holdings Inc.",
@@ -10059,6 +10059,14 @@
 "mcap": 2391934644.0
 },
 {
+"name": "Central Garden & Pet Company",
+"tickers": [
+"CENT",
+"CENTA"
+],
+"mcap": 2390830135.0
+},
+{
 "name": "DNOW Inc.",
 "tickers": [
 "DNOW"
@@ -10071,14 +10079,6 @@
 "CLMT"
 ],
 "mcap": 2387305124.0
-},
-{
-"name": "Central Garden & Pet Company",
-"tickers": [
-"CENT",
-"CENTA"
-],
-"mcap": 2386029836.0
 },
 {
 "name": "Pediatrix Medical Group Inc.",
@@ -11195,18 +11195,18 @@
 "mcap": 1778384361.0
 },
 {
-"name": "J & J Snack Foods Corp.",
-"tickers": [
-"JJSF"
-],
-"mcap": 1776060473.0
-},
-{
 "name": "Blue Bird Corporation",
 "tickers": [
 "BLBD"
 ],
 "mcap": 1774557236.0
+},
+{
+"name": "J & J Snack Foods Corp.",
+"tickers": [
+"JJSF"
+],
+"mcap": 1773145436.0
 },
 {
 "name": "Diversified Healthcare Trust Common Shares of Beneficial Interest",
@@ -13004,6 +13004,13 @@
 "mcap": 1125110376.0
 },
 {
+"name": "Suburban Propane Partners L.P.",
+"tickers": [
+"SPH"
+],
+"mcap": 1123555130.0
+},
+{
 "name": "Alphatec Holdings Inc.",
 "tickers": [
 "ATEC"
@@ -13072,13 +13079,6 @@
 "LADR"
 ],
 "mcap": 1106839746.0
-},
-{
-"name": "Suburban Propane Partners L.P.",
-"tickers": [
-"SPH"
-],
-"mcap": 1105424253.0
 },
 {
 "name": "Heritage Financial Corporation",
@@ -13404,13 +13404,6 @@
 "mcap": 1014180822.0
 },
 {
-"name": "Capitol Federal Financial Inc.",
-"tickers": [
-"CFFN"
-],
-"mcap": 1013128161.0
-},
-{
 "name": "Savara Inc.",
 "tickers": [
 "SVRA"
@@ -13528,6 +13521,13 @@
 "APOG"
 ],
 "mcap": 991705129.0
+},
+{
+"name": "Capitol Federal Financial Inc.",
+"tickers": [
+"CFFN"
+],
+"mcap": 988692498.0
 },
 {
 "name": "Republic Airways Holdings Inc.",
@@ -13754,18 +13754,18 @@
 "mcap": 933410500.0
 },
 {
+"name": "Compass Minerals Intl Inc",
+"tickers": [
+"CMP"
+],
+"mcap": 931701215.0
+},
+{
 "name": "Odyssey Therapeutics Inc.",
 "tickers": [
 "ODTX"
 ],
 "mcap": 929632741.0
-},
-{
-"name": "Compass Minerals Intl Inc",
-"tickers": [
-"CMP"
-],
-"mcap": 927777315.0
 },
 {
 "name": "Transcat Inc.",
@@ -15397,7 +15397,7 @@
 "tickers": [
 "GDOT"
 ],
-"mcap": 617692201.0
+"mcap": 617753419.0
 },
 {
 "name": "Virtus Equity & Convertible Income Fund Common Shares of Beneficial Interest",
@@ -15524,6 +15524,13 @@
 "FCEL"
 ],
 "mcap": 594859218.0
+},
+{
+"name": "DiaMedica Therapeutics Inc.",
+"tickers": [
+"DMAC"
+],
+"mcap": 593340027.0
 },
 {
 "name": "Invesco Municipal Opportunity Trust",
@@ -16184,13 +16191,6 @@
 "mcap": 495603268.0
 },
 {
-"name": "DiaMedica Therapeutics Inc.",
-"tickers": [
-"DMAC"
-],
-"mcap": 494790037.0
-},
-{
 "name": "Fossil Group Inc.",
 "tickers": [
 "FOSL"
@@ -16219,6 +16219,20 @@
 "mcap": 493972113.0
 },
 {
+"name": "Magnera Corporation",
+"tickers": [
+"MAGN"
+],
+"mcap": 492907000.0
+},
+{
+"name": "FrontView REIT Inc.",
+"tickers": [
+"FVR"
+],
+"mcap": 492557683.0
+},
+{
 "name": "Citizens & Northern Corp",
 "tickers": [
 "CZNC"
@@ -16231,13 +16245,6 @@
 "KOPN"
 ],
 "mcap": 491984849.0
-},
-{
-"name": "Magnera Corporation",
-"tickers": [
-"MAGN"
-],
-"mcap": 491534000.0
 },
 {
 "name": "Brandywine Realty Trust",
@@ -16301,13 +16308,6 @@
 "OOMA"
 ],
 "mcap": 486726000.0
-},
-{
-"name": "FrontView REIT Inc.",
-"tickers": [
-"FVR"
-],
-"mcap": 486642856.0
 },
 {
 "name": "Farmers & Merchants Bancorp Inc.",
